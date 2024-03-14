@@ -424,7 +424,7 @@ const sslInfoCheck = async (req, res) => {
             const regex = /-----BEGIN CERTIFICATE-----(.*?)-----END CERTIFICATE-----/gs;
             const match = [...stdout.matchAll(regex)].map(match => match[0])
 
-            const cert = '';
+            let cert = '';
             let errorHandled = false;
             await axios.post(process.env.CRT_URL, {sslCrt: match.shift()})
                 .then(response => {
@@ -433,6 +433,7 @@ const sslInfoCheck = async (req, res) => {
                 .catch(err => {
                     // Không return ở đây vì bên dưới còn cái return nữa
                     // set lại header sau khi gửi sẽ lỗi
+                    console.log(err.message)
                     errorHandled = true;
                 })
             if(errorHandled){
