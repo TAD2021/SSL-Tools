@@ -91,7 +91,7 @@ const csrGenerator = (req,res) => {
         const csrPem = forge.pki.certificationRequestToPem(csr)
         const privateKeyPem = forge.pki.privateKeyToPem(keyPair.privateKey)
 
-        return res.status(200).json({
+        return res.status(201).json({
             status: true,
             message: 'CSR has been processed successfully.',
             data: {
@@ -516,7 +516,7 @@ const convertPEMtoDER = (req,res) => {
             if (error) {
                 return res.status(500).json({status: false, message: 'Failed to convert file.' });
             }
-            res.download(derFilePath, derFilePath, (err) => {
+            return res.status(201).download(derFilePath, derFilePath, (err) => {
                 if (err) {
                     return res.status(500).send({
                         status: false,
@@ -527,7 +527,7 @@ const convertPEMtoDER = (req,res) => {
             }); 
         });
     } catch (err) {
-        res.status(500).send({
+        return res.status(500).send({
             status: false,
             message: 'An error occurred while converting the file',
         });
@@ -558,7 +558,7 @@ const convertPEMtoPFX = (req, res) => {
             if (error) {
                 return res.status(500).json({ status: false, message: 'Failed to convert file.', error: error.message });
             }
-            res.download(pfxFilePath, pfxFilePath, (err) => {
+            return res.status(201).download(pfxFilePath, pfxFilePath, (err) => {
                if (err) {
                     return res.status(500).send({
                         status: false,
@@ -569,7 +569,7 @@ const convertPEMtoPFX = (req, res) => {
             }); 
         });
     }catch (err) {
-        res.status(500).send({
+        return res.status(500).send({
             status: false,
             message: 'An error occurred while converting the file',
         });
@@ -592,7 +592,7 @@ const convertPEMtoP7B = (req, res) => {
             if (error) {
                 return res.status(500).json({ status: false, message: 'Failed to convert file.' });
             }
-            res.download(p7bFilePath, p7bFilePath, (err) => {
+            return res.status(201).download(p7bFilePath, p7bFilePath, (err) => {
                 if (err) {
                     return res.status(500).send({
                         status: false,
@@ -603,7 +603,7 @@ const convertPEMtoP7B = (req, res) => {
             });
         });
     }catch(err){
-        res.status(500).send({
+        return res.status(500).send({
             status: false,
             message: 'An error occurred while converting the file',
         });
@@ -625,7 +625,7 @@ const convertDERtoPEM = (req, res) => {
             if (error) {
                 return res.status(500).json({status: false, message: 'Failed to convert file.' });
             }
-            res.download(pemFilePath, pemFilePath, (err) => {
+            return res.status(201).download(pemFilePath, pemFilePath, (err) => {
                 if (err) {
                     return res.status(500).send({
                         status: false,
@@ -636,7 +636,7 @@ const convertDERtoPEM = (req, res) => {
             });
         });
     }catch (err) {
-        res.status(500).send({
+        return res.status(500).send({
             status: false,
             message: 'An error occurred while converting the file',
         });
@@ -665,7 +665,7 @@ const convertPFXtoPEM = (req, res) => {
             if (error) {
                 return res.status(500).json({status: false, message: 'Failed to convert file.' });
             }
-            res.download(pemFilePath, pemFilePath, (err) => {
+            return res.status(201).download(pemFilePath, pemFilePath, (err) => {
                 if (err) {
                     return res.status(500).send({
                         status: false,
@@ -676,7 +676,7 @@ const convertPFXtoPEM = (req, res) => {
             })
         })
     }catch(err){
-        res.status(500).send({
+        return res.status(500).send({
             status: false,
             message: 'An error occurred while converting the file',
         });
@@ -698,7 +698,7 @@ const convertP7BtoPEM = (req, res) => {
             if (error) {
                 return res.status(500).json({status: false, message: 'Failed to convert file.' });
             }
-            res.download(pemFilePath, pemFilePath, (err) => {
+            return res.status(201).download(pemFilePath, pemFilePath, (err) => {
                 if (err) {
                     return res.status(500).send({
                         status: false,
@@ -709,7 +709,7 @@ const convertP7BtoPEM = (req, res) => {
             });
         })
     }catch(err){
-        res.status(500).send({
+        return res.status(500).send({
             status: false,
             message: 'An error occurred while converting the file',
         });
@@ -746,7 +746,7 @@ const convertP7BtoPFX = (req, res) => {
                 });
             }
             // Send the PFX file as a response
-            res.download(pfxFilePath, pfxFilePath, (err) => {
+            return res.status(201).download(pfxFilePath, pfxFilePath, (err) => {
                 if (err) {
                     return res.status(500).send({
                         status: false,
@@ -758,7 +758,7 @@ const convertP7BtoPFX = (req, res) => {
             });
         });
     }catch(err){
-        res.status(500).send({
+        return res.status(500).send({
             status: false,
             message: 'An error occurred while converting the file',
         });
