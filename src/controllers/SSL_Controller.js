@@ -647,7 +647,7 @@ const convertPFXtoPEM = (req, res) => {
     const pfxFilePath = req.file?.path
     const password = req.body.password
     const pemFilePath = 'converted-file.pem';
-    const command = `openssl pkcs12 -in ${pfxFilePath} -out ${pemFilePath} -legacy -nodes -password pass:${password}`;
+    const command = `openssl pkcs12 -in ${pfxFilePath} -out ${pemFilePath} -nodes -password pass:${password}`;
     try{
         if (!pfxFilePath) {
             return res.status(400).send({
@@ -736,7 +736,7 @@ const convertP7BtoPFX = (req, res) => {
     }
     const command = `openssl pkcs7 -print_certs -in ${p7bFilePath} -out intermediate.pem && \
         openssl pkcs12 -export -out ${pfxFilePath} -inkey ${privateKeyFilePath} \
-        -in intermediate.pem -certfile ${caBundleFilePath} -passout pass:${password} -legacy`;
+        -in intermediate.pem -certfile ${caBundleFilePath} -passout pass:${password}`;
     try{
         exec(command, (error, stdout, stderr) => {
             if (error) {
