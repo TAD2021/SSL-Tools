@@ -3,23 +3,10 @@ const dns = require('dns')
 
 const isValidDomain = (domain) => {
     const domainRegex = /^(?:[-A-Za-z0-9]+\.)+[-A-Za-z0-9]{2,}(?:\.[A-Za-z]{2,})?$/;
-    const unicodeRegex = /[\u00A1-\uFFFF]/;
 
     if (domainRegex.test(domain)) {
         return true;
     }
-
-    // Kiểm tra xem domain có chứa các ký tự Unicode không
-    if (unicodeRegex.test(domain)) {
-        try {
-            // Chuyển đổi domain thành dạng ASCII
-            const asciiDomain = new URL(`http://${domain}`).hostname;
-            return domainRegex.test(asciiDomain);
-        } catch (error) {
-            return false; // Xảy ra lỗi khi chuyển đổi domain
-        }
-    }
-
     return false;
 }
 
