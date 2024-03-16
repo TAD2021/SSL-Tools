@@ -552,7 +552,7 @@ const convertPEMtoPFX = (req, res) => {
             message: 'Password is required',
         });
     }
-    const command = `openssl pkcs12 -export -out ${pfxFilePath} -inkey ${privateKeyFilePath} -in ${certFilePath} -certfile ${caBundleFilePath} -passout pass:${password} -legacy`;
+    const command = `openssl pkcs12 -export -out ${pfxFilePath} -inkey ${privateKeyFilePath} -in ${certFilePath} -certfile ${caBundleFilePath} -passout pass:${password}`;
     try{
         exec(command, (error, stdout, stderr) => {
             if (error) {
