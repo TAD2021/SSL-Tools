@@ -17,7 +17,7 @@ const extractLinks = (html) => {
 const checkHttpsUsage = (links) => {
     const nonSecureLinks = [];
     links.forEach(link => {
-        if (link && !link.startsWith('https://') && !link.startsWith('/')) {
+        if (link && !link.startsWith('https://') && link.startsWith('http://')) {
             nonSecureLinks.push(link);
         }
     });

@@ -1,47 +1,66 @@
-const cheerio = require('cheerio')
-const forge = require('node-forge')
+const multer = require('multer');
 
-// Hàm để trích xuất các đường dẫn từ nội dung HTML
-const extractLinks = (html) => {
-    const $ = cheerio.load(html);
-    const links = [];
-    
-    $('a').each((index, element) => {
-        links.push($(element).attr('href'));
-    });
-    
-    return links;
-}
+const allowedExtensions = (extensions) => (req, file, cb) => {
+    const fileExtension = '.' + file.originalname.split('.').pop().toLowerCase();
+    if (extensions.includes(fileExtension)) {
+        cb(null, true);
+    } else {
+        cb(new Error(`Only ${extensions.join(', ')} files are allowed`));
+    }
+};
+  
+const uploadPEM = multer({
+    storage: multer.diskStorage({}),
+    fileFilter: allowedExtensions([ '.pem', '.crt', '.cer', '.key' ]),
+}).single('file');
+  
+const uploadDER = multer({
+    storage: multer.diskStorage({}),
+    fileFilter: allowedExtensions([ '.der', '.cer' ]),
+}).single('file');
 
-// Hàm để kiểm tra xem đường dẫn có sử dụng HTTPS hay không
-const checkHttpsUsage = (links) => {
-    const nonSecureLinks = [];
-    links.forEach(link => {
-        if (link && !link.startsWith('https://') && link.startsWith('http://')) {
-            nonSecureLinks.push(link);
+const uploadMultiPEM = multer({
+    storage: multer.diskStorage({}),
+    fileFilter: allowedExtensions(['.pem', '.crt', '.cer', '.key']),
+}).fields([
+    { name: 'certificate', maxCount: 1 },
+    { name: 'privateKey', maxCount: 1 },
+    { name: 'caBundle' }
+]);
+
+const uploadPFX = multer({
+    storage: multer.diskStorage({}),
+    fileFilter: allowedExtensions([ '.pfx', '.p12' ]),
+}).single('file');
+
+const uploadP7B = multer({
+    storage: multer.diskStorage({}),
+    fileFilter: allowedExtensions([ '.p7b', '.p7c' ]),
+}).single('file');
+
+const uploadMultiP7B = multer({
+    storage: multer.diskStorage({}),
+    fileFilter: (req, file, cb) => {
+        // Define allowed extensions based on field name
+        if (file.fieldname === 'p7b') {
+            allowedExtensions([ '.p7b', '.p7c' ])(req, file, cb);
+        } else if (file.fieldname === 'privateKey' || file.fieldname === 'caBundle') {
+            allowedExtensions(['.pem', '.crt', '.cer', '.key'])(req, file, cb);
+        } else {
+            cb(new Error('Invalid field name'));
         }
-    });
-
-    return nonSecureLinks
-}
-
-function isValidSslCertString(sslCertString, type) {
-    if (!sslCertString || typeof sslCertString !== 'string') {
-        return false;
     }
-    try {
-        if(type === 'crt') forge.pki.certificateFromPem(sslCertString);
-        else if (type === 'csr') forge.pki.certificationRequestFromPem(sslCertString);
-        else if (type === 'privateKey') forge.pki.privateKeyFromPem(sslCertString);
-        else return false
-        return true;
-    } catch (error) {
-        return false;
-    }
-}
+}).fields([
+    { name: 'p7b', maxCount: 1 },
+    { name: 'privateKey', maxCount: 1 },
+    { name: 'caBundle' }
+]);
 
 module.exports = {
-    extractLinks,
-    checkHttpsUsage,
-    isValidSslCertString
+    uploadPEM,
+    uploadDER,
+    uploadMultiPEM,
+    uploadPFX,
+    uploadP7B,
+    uploadMultiP7B
 }
