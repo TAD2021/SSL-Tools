@@ -63,7 +63,14 @@ const csrGenerator = (req,res) => {
         }
 
         // Tạo cặp khóa RSA với độ dài bit 2048, 3072 hoặc 4096
-        const keyPair = forge.pki.rsa.generateKeyPair({ bits: keySize })
+        const validKeySize = [2048, 3072, 4096]
+        if(!validKeySize.includes(parseInt(keySize))){
+            return res.status(400).json({
+                status: false,
+                message: 'KeySize is not valid'
+            })
+        }
+        const keyPair = forge.pki.rsa.generateKeyPair({ bits: parseInt(keySize) })
 
         // Tạo CSR
         const csr = forge.pki.createCertificationRequest();
@@ -72,6 +79,13 @@ const csrGenerator = (req,res) => {
 
         // Ký CSR bằng Private Key, thêm mã hóa cho CSR
         // Loại mã hóa (encryptionType) bao gồm: sha256, sha384 và sha512
+        const validEncryptionType = ['sha256', 'sha384', 'sha512']
+        if(!validEncryptionType.includes(encryptionType)){
+            return res.status(400).json({
+                status: false,
+                message: 'Encryption Type is not valid'
+            })
+        }
         csr.sign(keyPair.privateKey, forge.md[encryptionType].create())
 
         const csrPem = forge.pki.certificationRequestToPem(csr)
