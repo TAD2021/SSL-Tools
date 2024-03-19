@@ -543,7 +543,7 @@ const convertPEMtoPFX = (req, res) => {
     }
     const certFilePath = req.files['certificate'][0].path;
     const privateKeyFilePath = req.files['privateKey'][0].path;
-    const caBundleFilePath = req.files['caBundle'].map(file => file.path).join(' ');
+    const caBundleFilePath = req.files['caBundle'].map(file => file.path).join(' -certfile ');
     const pfxFilePath = 'converted-file.pfx';
     const password = req.body.password;
     if (!password) {
@@ -584,7 +584,7 @@ const convertPEMtoP7B = (req, res) => {
         });
     }
     const certFilePath = req.files['certificate'][0].path;
-    const caBundleFilePath = req.files['caBundle'].map(file => file.path).join(' ');
+    const caBundleFilePath = req.files['caBundle'].map(file => file.path).join(' -certfile ');
     const p7bFilePath = 'converted-file.p7b';
     const command = `openssl crl2pkcs7 -nocrl -certfile ${certFilePath} -out ${p7bFilePath} -certfile ${caBundleFilePath}`;
     try{
@@ -725,7 +725,7 @@ const convertP7BtoPFX = (req, res) => {
     }
     const p7bFilePath = req.files['p7b'][0].path;
     const privateKeyFilePath = req.files['privateKey'][0].path;
-    const caBundleFilePath = req.files['caBundle'].map(file => file.path).join(' ');
+    const caBundleFilePath = req.files['caBundle'].map(file => file.path).join(' -certfile ');
     const pfxFilePath = 'converted-file.pfx';
     const password = req.body.password;
     if (!password) {
