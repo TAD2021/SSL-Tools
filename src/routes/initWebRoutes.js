@@ -20,7 +20,7 @@ const initWebRoutes = (app) =>  {
     router.post('/SSL/SSLFileConvert/PFXtoPEM', uploadPFX, SSL_Controller.convertPFXtoPEM)
     router.post('/SSL/SSLFileConvert/P7BtoPEM', uploadP7B, SSL_Controller.convertP7BtoPEM)
     router.post('/SSL/SSLFileConvert/P7BtoPFX', uploadMultiP7B, SSL_Controller.convertP7BtoPFX)
-    router.post('/SSL/CAAGenerator', SSL_Controller.CAAGenerator)
+    router.get('/SSL/CAAGenerator', SSL_Controller.CAAGenerator)
     return app.use('/',router)
 }
 
