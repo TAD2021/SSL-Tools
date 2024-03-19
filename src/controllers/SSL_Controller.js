@@ -556,7 +556,7 @@ const convertPEMtoPFX = (req, res) => {
     try{
         exec(command, (error, stdout, stderr) => {
             if (error) {
-                return res.status(500).json({ status: false, message: 'Failed to convert file.', error: error.message });
+                return res.status(500).json({ status: false, message: 'Failed to convert file.'});
             }
             return res.status(201).download(pfxFilePath, pfxFilePath, (err) => {
                if (err) {
